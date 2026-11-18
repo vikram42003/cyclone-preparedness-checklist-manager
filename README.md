@@ -2,50 +2,62 @@
 
 **Course:** CAP455 — Object-Oriented Programming using C++  
 **Session:** 2026–27  
-**Phase:** CA1 — Design & Create
+**Current Phase:** CA2 — Persist & Search
 
 ---
 
 ## Project Description
 
-The **Cyclone Preparedness Checklist Manager** is a simple console-based C++ application that helps a single household maintain a checklist of preparedness tasks organized by the three stages of a cyclone:
+The **Cyclone Preparedness Checklist Manager** is a C++ console application for a single household to maintain a checklist of preparedness tasks organized by the three stages of a cyclone:
 
-- Before the Cyclone  
-- During the Cyclone  
+- Before the Cyclone
+- During the Cyclone
 - After the Cyclone
 
-Each checklist entry records a task ID, task name, its cyclone stage, and whether it is Prepared or Not Prepared.
+Each entry records a task ID, name, stage, and whether it is Prepared or Not Prepared.
 
 ---
 
-## Features Implemented in CA1
+## Features by Phase
 
-| Feature | Status |
-|---|---|
-| Add a checklist item (with ID, name, stage, and preparation status) | ✅ Implemented |
-| View all checklist items grouped by cyclone stage | ✅ Implemented |
-| Input validation (ID, name, stage, status, menu) | ✅ Implemented |
-| Duplicate ID prevention | ✅ Implemented |
-| Fixed-size in-memory array of objects (capacity: 50) | ✅ Implemented |
-| Static member, inline function, friend function, pointer, `this` pointer, `std::string` | ✅ Implemented |
+### CA1 — Design & Create ✅
+- Add a checklist item (ID, name, stage, preparation status)
+- View all items grouped by cyclone stage
+- Input validation; duplicate ID prevention
+- In-memory fixed-size array (50 items)
+
+### CA2 — Persist & Search ✅
+- **Binary file persistence** — data survives application restarts (`data/checklist.dat`)
+- **Load on startup** — records read using `fstream` and `seekg`
+- **Search by ID** — reads directly from binary file using `seekg`
+- **Search by Stage** — filters the in-memory array
+- **Update Preparation Status** — modifies and immediately saves to file
+- Default, parameterised, and copy constructors + explicit destructor
+
+---
+
+## Menu (CA2)
+
+```
+1. Add Checklist Item
+2. View All Checklist Items
+3. Search by ID (file seekg)
+4. Search by Stage
+5. Update Preparation Status
+6. Exit
+```
 
 ---
 
 ## C++ Requirements
 
 - **Standard:** C++11 or later
-- **Compiler:** Any standard C++ compiler (tested with GCC 16.1.0 via MSYS2 on Windows)
-- **Dependencies:** None (uses only `<iostream>`, `<string>`, `<limits>`)
+- **Compiler:** Any standard C++ compiler (tested with GCC 16.1.0 / MSYS2 on Windows)
+- **Headers used:** `<iostream>`, `<string>`, `<limits>`, `<fstream>`, `<cstring>`
 
 ---
 
-## Compilation Instructions
-
-```bash
-g++ -std=c++11 -Wall -Wextra -o cyclone_manager src/main.cpp
-```
-
-On Windows using MSYS2/MinGW:
+## Compilation
 
 ```bash
 g++ -std=c++11 -Wall -Wextra -o cyclone_manager.exe src/main.cpp
@@ -53,14 +65,15 @@ g++ -std=c++11 -Wall -Wextra -o cyclone_manager.exe src/main.cpp
 
 ---
 
-## Execution Instructions
+## Execution
 
 ```bash
-./cyclone_manager        # Linux / macOS
-cyclone_manager.exe      # Windows
+cyclone_manager.exe        # Windows
+./cyclone_manager          # Linux / macOS
 ```
 
-Use the numbered menu to add items and view the checklist. Enter `3` to exit.
+The file `data/checklist.dat` is created automatically when the first item is added.  
+Ensure the `data/` directory exists (it is committed to the repository).
 
 ---
 
@@ -68,62 +81,53 @@ Use the numbered menu to add items and view the checklist. Enter `3` to exit.
 
 ```
 cyclone-preparedness-checklist-manager/
-│
 ├── docs/
-│   ├── proposal.md          # Project proposal (CA1 submission)
-│   ├── data_dictionary.md   # Data dictionary for ChecklistItem
-│   ├── uml.md               # UML class diagram
-│   ├── flowchart.md         # Application flowchart
-│   └── test_cases.md        # Test cases and expected results
-│
+│   ├── proposal.md           ← CA1 10-page report
+│   ├── CA2_proposal.md       ← CA2 10-page report
+│   ├── CA1_summary.md        ← CA1 implementation summary + viva Q&A
+│   ├── CA2_summary.md        ← CA2 implementation summary + viva Q&A
+│   ├── data_dictionary.md    ← Attribute and file format reference
+│   ├── flowchart.md          ← CA1 flowchart (CA2 flowcharts in CA2_proposal.md)
+│   ├── test_cases.md         ← CA1 test cases
+│   └── uml.md                ← CA1 UML
 ├── src/
-│   └── main.cpp             # Complete C++ source code
-│
+│   └── main.cpp              ← All source code (CA1 + CA2)
 ├── data/
-│   └── README.md            # Note: CA1 uses no persistent storage
-│
+│   ├── checklist.dat         ← Binary data file (auto-created; gitignored)
+│   └── README.md
 ├── tests/
-│   └── CA1_test_cases.md    # Detailed test log
-│
-├── cyclone_manager.exe      # Compiled executable (Windows)
-└── README.md                # This file
+│   ├── CA1_test_cases.md
+│   └── CA2_test_cases.md
+├── cyclone_manager.exe       ← Compiled executable (gitignored)
+└── README.md
 ```
 
 ---
 
-## Known Limitations (CA1)
+## Known Limitations
 
-- Data is **not saved** between runs — all records are in-memory only.
-- No search, update, or delete functionality (planned for CA2 and CA3).
-- Maximum of 50 checklist entries per session.
-- Single household — no multi-user or authentication support.
+- Data file is binary and not human-readable.
+- No delete functionality (planned for CA3).
+- Only `isPrepared` can be updated; name and stage are immutable in CA2.
+- Maximum 50 items per session / file.
 
 ---
 
 ## Future Phase Overview
 
-| Phase | Focus | Planned Features |
+| Phase | Focus | Planned |
 |---|---|---|
-| CA2 | Persist & Search | Save/load checklist to/from file; search by ID or stage |
-| CA3 | Reuse & Delete | Inheritance/reuse; delete and update entries |
-| CA4 | Integrate & Defend | Integration, final testing, viva |
+| CA3 | Reuse & Delete | Inheritance; operator overloading; dynamic memory; delete |
+| CA4 | Integrate & Defend | Templates; STL; exceptions; full CRUD; live demo |
 
 ---
 
 ## AI Assistance Disclosure
 
-<!-- 
-  PLACEHOLDER: Please complete this section accurately to reflect 
-  the actual extent of AI assistance used in this project.
--->
-
-*[To be completed by the student before submission.]*
+> *[Complete accurately before submission.]*
 
 ---
 
 ## Author
 
-**Name:** [Your Name]  
-**Roll Number:** [Your Roll Number]  
-**Course:** MCA — CAP455 OOP using C++  
-**Institution:** [Your Institution Name]
+**Name:** [Your Name] | **Roll:** [Roll Number] | **Institution:** [Institution]
