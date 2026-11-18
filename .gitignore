@@ -69,3 +69,6 @@ desktop.ini
 *.gcda
 *.gcno
 *.gcov
+# Binary data file (auto-generated at runtime)
+data/checklist.dat
+
